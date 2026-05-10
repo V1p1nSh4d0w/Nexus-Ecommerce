@@ -6,7 +6,8 @@ A fully functional, responsive e-commerce web application built using **HTML5**,
 
 ## 🔗 Live Demo
 
-**[Click here to view the live website](https://yourusername.github.io/nexus-ecommerce/)**
+**[Click here to view the live website] 
+https://v1p1nsh4d0w.github.io/Nexus-Ecommerce/
 
 ---
 
@@ -24,7 +25,6 @@ nexus-ecommerce/
 │   ├── data.js         ← Product data, categories, testimonials, blog posts
 │   └── app.js          ← Application logic, navigation, cart, auth
 │
-├── assets/             ← Images and media (if any)
 │
 └── README.md           ← Project documentation
 ```
@@ -91,7 +91,7 @@ Visit the live demo link above.
 ### Option 2 — Run Locally
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/nexus-ecommerce.git
+git clone https://github.com/V1p1nSh4d0w/Nexus-Ecommerce.git
 
 # Open in browser
 cd nexus-ecommerce
@@ -120,17 +120,17 @@ No Node.js, no npm, no build tools required — just open `index.html` in any br
 Vipin Patel
 BCA 6th Semester  
 Microtek College of Management and Technology 
-Roll No: 134
+Roll No: 19724407200
 
 Devansh Dixit
 BCA 6th Semester  
 Microtek College of Management and Technology 
-Roll No: 
+Roll No: 19724407094
 
 Pankaj Singh
 BCA 6th Semester  
 Microtek College of Management and Technology 
-Roll No: 
+Roll No: 19724407131
 
 
 ---
