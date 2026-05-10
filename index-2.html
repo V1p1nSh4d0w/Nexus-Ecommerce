@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEXUS — Premium E-Commerce</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- CART DRAWER OVERLAY -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCartDrawer()"></div>
+
+<!-- CART DRAWER -->
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-header">
+    <h3>🛒 Shopping Cart (<span id="drawerCount">0</span>)</h3>
+    <button class="drawer-close" onclick="closeCartDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-footer">
+    <div class="drawer-total">
+      <span>Subtotal</span>
+      <span id="drawerTotal">₹0</span>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-bottom:0.5rem;" onclick="goTo('cart')">View Full Cart</button>
+    <button class="btn btn-outline" style="width:100%;" onclick="goTo('checkout')">Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- AUTH MODAL -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    <div id="authForm">
+      <h2>Welcome Back 👋</h2>
+      <p>Sign in to your NEXUS account</p>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="your@email.com" id="loginEmail">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" id="loginPass">
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:1rem;" onclick="doLogin()">Sign In</button>
+      <p style="text-align:center;font-size:0.82rem;color:var(--text2);">Don't have an account? <span style="color:var(--accent);cursor:pointer;" onclick="showSignup()">Sign Up</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="goTo('home')">NEXUS</div>
+    <div class="nav-links">
+      <a onclick="goTo('home')" id="nav-home" class="active">Home</a>
+      <a onclick="goTo('products')" id="nav-products">Shop</a>
+      <a onclick="goTo('categories')" id="nav-categories">Categories</a>
+      <a onclick="goTo('deals')" id="nav-deals">Deals 🔥</a>
+      <a onclick="goTo('blog')" id="nav-blog">Blog</a>
+      <a onclick="goTo('about')" id="nav-about">About</a>
+      <a onclick="goTo('contact')" id="nav-contact">Contact</a>
+    </div>
+    <div class="search-bar" style="flex:0 1 240px;">
+      <span>🔍</span>
+      <input type="text" placeholder="Search products..." id="searchInput" onkeydown="if(event.key==='Enter')doSearch()">
+    </div>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" onclick="goTo('wishlist')" title="Wishlist">♡<span class="badge" id="wishBadge" style="display:none;">0</span></button>
+      <button class="nav-icon-btn" onclick="openCartDrawer()" title="Cart">🛒<span class="badge" id="cartBadge">0</span></button>
+      <button class="nav-icon-btn" onclick="goTo('track')" title="Track Order">📦</button>
+      <button class="nav-btn" id="authBtn" onclick="openModal('authModal')">Sign In</button>
+      <button class="nav-icon-btn" id="profileBtn" onclick="goTo('profile')" style="display:none;" title="Profile">👤</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================== PAGES ======================== -->
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">✦ New Season Drop 2026</div>
+        <h1>Shop the <span>Future</span> of Fashion & Tech</h1>
+        <p>Discover curated collections of premium products with lightning-fast delivery, easy returns, and unbeatable prices.</p>
+        <div class="hero-btns">
+          <button class="btn btn-primary" onclick="goTo('products')">Shop Now →</button>
+          <button class="btn btn-outline" onclick="goTo('deals')">View Deals</button>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Products</div></div>
+          <div class="stat"><div class="stat-num">2M+</div><div class="stat-label">Happy Customers</div></div>
+          <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avg Rating</div></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-product-grid" id="heroProductGrid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section">
+    <div class="section-inner">
+      <!-- BRANDS -->
+      <div class="brands-row">
+        <div class="brand-item">NIKE</div>
+        <div class="brand-item">APPLE</div>
+        <div class="brand-item">SAMSUNG</div>
+        <div class="brand-item">LEVI'S</div>
+        <div class="brand-item">SONY</div>
+        <div class="brand-item">ADIDAS</div>
+        <div class="brand-item">ZARA</div>
+      </div>
+
+      <!-- CATEGORIES -->
+      <div class="section-header" style="margin-top:3rem;">
+        <div>
+          <div class="section-title">Browse Categories</div>
+          <div class="section-sub">Explore our curated product collections</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="goTo('categories')">View All</button>
+      </div>
+      <div class="categories-grid" id="homeCategories"></div>
+
+      <!-- FLASH SALE -->
+      <div class="flash-sale" style="margin-top:3rem;">
+        <div class="flash-header">
+          <div>⚡</div>
+          <div class="flash-title">Flash Sale</div>
+          <div class="countdown">
+            <div class="countdown-unit" id="cd-h">04</div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit" id="cd-m">23</div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit" id="cd-s">59</div>
+          </div>
+          <div style="margin-left:auto;font-size:0.82rem;color:var(--text2);">Hurry! Limited stock</div>
+        </div>
+        <div class="products-grid" id="flashSaleGrid"></div>
+      </div>
+
+      <!-- PROMO BANNER -->
+      <div class="promo-banner">
+        <div class="promo-text">
+          <h2>Summer Sale is LIVE 🌞</h2>
+          <p>Get up to 60% off on selected items. Use code at checkout.</p>
+          <div class="promo-code">NEXUS60</div>
+        </div>
+        <button class="btn btn-white" onclick="goTo('deals')">Shop Deals</button>
+      </div>
+
+      <!-- FEATURED PRODUCTS -->
+      <div class="section-header">
+        <div>
+          <div class="section-title">Featured Products</div>
+          <div class="section-sub">Hand-picked favorites just for you</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="goTo('products')">See All</button>
+      </div>
+      <div class="products-grid" id="featuredGrid"></div>
+
+      <!-- NEWSLETTER -->
+      <div class="newsletter-section">
+        <h2>Join 500K+ Subscribers 📬</h2>
+        <p>Get exclusive deals, new arrivals, and style tips delivered to your inbox.</p>
+        <div class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address...">
+          <button class="btn btn-primary" onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+      </div>
+
+      <!-- TESTIMONIALS -->
+      <div class="section-header" style="margin-top:3rem;">
+        <div>
+          <div class="section-title">What Customers Say</div>
+        </div>
+      </div>
+      <div class="testimonials-grid" id="testimonialsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div class="page" id="page-products">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Products</div>
+          <div class="section-sub" id="productsSubtitle">Showing all 24 products</div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+          <select class="filter-select" onchange="sortProducts(this.value)">
+            <option value="">Sort by: Default</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="newest">Newest First</option>
+          </select>
+        </div>
+      </div>
+      <div class="search-filters" id="filterRow"></div>
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES PAGE -->
+<div class="page" id="page-categories">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">All Categories</div>
+          <div class="section-sub">Browse our wide selection of product categories</div>
+        </div>
+      </div>
+      <div class="categories-grid" id="allCategoriesGrid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL PAGE -->
+<div class="page" id="page-product-detail">
+  <div class="section">
+    <div class="section-inner">
+      <div class="back-btn" onclick="history.go(-1) || goTo('products')">← Back</div>
+      <div class="pd-layout" id="productDetailContent"></div>
+      <div style="margin-top:4rem;">
+        <div class="section-header">
+          <div class="section-title">Related Products</div>
+        </div>
+        <div class="products-grid" id="relatedProducts"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DEALS PAGE -->
+<div class="page" id="page-deals">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">🔥 Hot Deals & Offers</div>
+          <div class="section-sub">Limited time offers — don't miss out!</div>
+        </div>
+      </div>
+      <div class="promo-banner" style="margin-bottom:2rem;">
+        <div class="promo-text">
+          <h2>Mega Weekend Sale 🛍️</h2>
+          <p>Up to 70% off across all categories. Ends Sunday midnight!</p>
+          <div class="promo-code">MEGA70</div>
+        </div>
+        <div style="text-align:center;color:#fff;position:relative;z-index:1;">
+          <div style="font-size:0.85rem;margin-bottom:0.5rem;">Ends in:</div>
+          <div class="countdown" style="justify-content:center;">
+            <div class="countdown-unit" style="background:rgba(255,255,255,0.25);" id="d-h">12</div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit" style="background:rgba(255,255,255,0.25);" id="d-m">45</div>
+            <div class="countdown-sep">:</div>
+            <div class="countdown-unit" style="background:rgba(255,255,255,0.25);" id="d-s">30</div>
+          </div>
+        </div>
+      </div>
+      <div class="products-grid" id="dealsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CART PAGE -->
+<div class="page" id="page-cart">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-title" style="margin-bottom:2rem;">Shopping Cart 🛒</div>
+      <div id="cartContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT PAGE -->
+<div class="page" id="page-checkout">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-title" style="margin-bottom:2rem;">Secure Checkout 🔒</div>
+      <div id="checkoutContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDER CONFIRM PAGE -->
+<div class="page" id="page-order-confirm">
+  <div class="section">
+    <div class="section-inner">
+      <div id="orderConfirmContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- WISHLIST PAGE -->
+<div class="page" id="page-wishlist">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">My Wishlist ♡</div>
+          <div class="section-sub" id="wishlistCount">0 items saved</div>
+        </div>
+      </div>
+      <div class="wishlist-grid" id="wishlistGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div class="page" id="page-profile">
+  <div class="section">
+    <div class="section-inner">
+      <div class="profile-layout">
+        <div class="profile-sidebar">
+          <div class="profile-avatar" id="profileAvatar">U</div>
+          <div class="profile-name" id="profileDisplayName">User</div>
+          <div class="profile-email" id="profileDisplayEmail">user@email.com</div>
+          <div class="profile-menu">
+            <div class="profile-menu-item active" onclick="showProfileTab('orders')"><span>📦</span> My Orders</div>
+            <div class="profile-menu-item" onclick="showProfileTab('wishlist2')"><span>♡</span> Wishlist</div>
+            <div class="profile-menu-item" onclick="showProfileTab('addresses')"><span>📍</span> Addresses</div>
+            <div class="profile-menu-item" onclick="showProfileTab('settings')"><span>⚙️</span> Settings</div>
+            <div class="profile-menu-item" onclick="showProfileTab('wallet')"><span>💳</span> Wallet & Payments</div>
+            <div class="profile-menu-item" onclick="logout()" style="margin-top:1rem;color:var(--red);"><span>🚪</span> Logout</div>
+          </div>
+        </div>
+        <div class="profile-content" id="profileContent"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH RESULTS PAGE -->
+<div class="page" id="page-search">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Search Results</div>
+          <div class="section-sub" id="searchQuery">Showing results for "..."</div>
+        </div>
+      </div>
+      <div class="products-grid" id="searchGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG PAGE -->
+<div class="page" id="page-blog">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Style Journal ✍️</div>
+          <div class="section-sub">Trends, tips, and stories from the NEXUS team</div>
+        </div>
+      </div>
+      <div class="blog-grid" id="blogGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="section">
+    <div class="section-inner">
+      <div class="about-hero">
+        <h1>We're Building the Future of Shopping</h1>
+        <p>NEXUS was founded in 2018 with a simple mission: make premium products accessible to everyone, everywhere. Today we serve millions of customers across India and beyond.</p>
+      </div>
+      <div class="section-header">
+        <div class="section-title">Our Values</div>
+      </div>
+      <div class="values-grid">
+        <div class="value-card"><div class="value-icon">🎯</div><div class="value-title">Quality First</div><div class="value-desc">Every product is curated and verified for quality before it reaches you.</div></div>
+        <div class="value-card"><div class="value-icon">🚀</div><div class="value-title">Fast Delivery</div><div class="value-desc">Same-day delivery in 20+ cities, 2-day delivery across India.</div></div>
+        <div class="value-card"><div class="value-icon">💚</div><div class="value-title">Sustainability</div><div class="value-desc">Carbon-neutral shipping and eco-friendly packaging by 2027.</div></div>
+        <div class="value-card"><div class="value-icon">🔒</div><div class="value-title">Secure & Safe</div><div class="value-desc">Bank-grade encryption and 100% secure payment processing.</div></div>
+      </div>
+      <div class="section-header" style="margin-top:3rem;">
+        <div class="section-title">Meet Our Team</div>
+      </div>
+      <div class="team-grid" id="teamGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT PAGE -->
+<div class="page" id="page-contact">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Get in Touch</div>
+          <div class="section-sub">We'd love to hear from you</div>
+        </div>
+      </div>
+      <div class="contact-layout">
+        <div class="contact-info">
+          <h2>We're Here to Help 🤝</h2>
+          <p>Have a question about your order, our products, or anything else? Our support team is available 24/7 to assist you.</p>
+          <div class="contact-items">
+            <div class="contact-item"><span>📧</span><span>support@nexus.in</span></div>
+            <div class="contact-item"><span>📞</span><span>1800-NEXUS-IN (Toll Free)</span></div>
+            <div class="contact-item"><span>💬</span><span>Live Chat (avg response: 2 min)</span></div>
+            <div class="contact-item"><span>📍</span><span>NEXUS HQ, Bandra Kurla Complex, Mumbai 400051</span></div>
+          </div>
+        </div>
+        <div class="contact-form">
+          <div class="form-group"><label>Your Name</label><input type="text" placeholder="Rahul Sharma"></div>
+          <div class="form-group"><label>Email</label><input type="email" placeholder="rahul@email.com"></div>
+          <div class="form-group"><label>Subject</label>
+            <select><option>Order Issue</option><option>Return & Refund</option><option>Product Query</option><option>Payment Problem</option><option>Other</option></select>
+          </div>
+          <div class="form-group"><label>Message</label><textarea rows="4" placeholder="Describe your issue or question..."></textarea></div>
+          <button class="btn btn-primary" style="width:100%;" onclick="sendMessage()">Send Message 📨</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRACK ORDER PAGE -->
+<div class="page" id="page-track">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Track Your Order 📦</div>
+          <div class="section-sub">Enter your order ID to see live status</div>
+        </div>
+      </div>
+      <div class="track-box">
+        <div style="display:flex;gap:0.8rem;margin-bottom:2rem;">
+          <input type="text" class="coupon-input" style="flex:1;font-size:0.95rem;" placeholder="e.g. NX-2026-ABC123" id="trackOrderId">
+          <button class="btn btn-primary" onclick="trackOrder()">Track →</button>
+        </div>
+        <div id="trackResult"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARE PAGE -->
+<div class="page" id="page-compare">
+  <div class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Compare Products</div>
+          <div class="section-sub">Side-by-side comparison of top picks</div>
+        </div>
+      </div>
+      <div id="compareContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">NEXUS</div>
+        <p>India's most trusted premium e-commerce platform. Shop with confidence — quality guaranteed.</p>
+        <div class="footer-socials">
+          <div class="social-btn">𝕏</div>
+          <div class="social-btn">📘</div>
+          <div class="social-btn">📸</div>
+          <div class="social-btn">▶</div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a onclick="goTo('home')">Home</a></li>
+          <li><a onclick="goTo('products')">All Products</a></li>
+          <li><a onclick="goTo('deals')">Deals</a></li>
+          <li><a onclick="goTo('blog')">Blog</a></li>
+          <li><a onclick="goTo('compare')">Compare</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Customer Service</h4>
+        <ul>
+          <li><a onclick="goTo('track')">Track Order</a></li>
+          <li><a onclick="goTo('contact')">Contact Us</a></li>
+          <li><a>Returns & Refunds</a></li>
+          <li><a>FAQs</a></li>
+          <li><a>Size Guide</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a onclick="goTo('about')">About Us</a></li>
+          <li><a>Careers</a></li>
+          <li><a>Press</a></li>
+          <li><a>Privacy Policy</a></li>
+          <li><a>Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 NEXUS E-Commerce. All rights reserved. Made with ❤️ in India.</p>
+      <div class="footer-payments">
+        <div class="pay-icon">VISA</div>
+        <div class="pay-icon">MC</div>
+        <div class="pay-icon">UPI</div>
+        <div class="pay-icon">AMEX</div>
+        <div class="pay-icon">PAYPAL</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript files loaded in correct order -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>
